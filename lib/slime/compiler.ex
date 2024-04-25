@@ -124,19 +124,9 @@ defmodule Slime.Compiler do
     do: ~s[ #{name}="<%= {:safe, "#{quoted}"} %>"]
 
   # NOTE: string with interpolation or strings concatination
-  defp render_attribute_code(name, content, {op, _, _}, safe) when op in [:<<>>, :<>] do
+  defp render_attribute_code(name, content, _, safe) do
     value = if safe == :eex, do: content, else: "{:safe, #{content}}"
     ~s[ #{name}="<%= #{value} %>"]
-  end
-
-  defp render_attribute_code(name, content, _, safe) do
-    value = if safe == :eex, do: "slim__v", else: "{:safe, slim__v}"
-
-    """
-    <% slim__k = "#{name}"; slim__v = Slime.Compiler.hide_dialyzer_spec(#{content}) %>\
-    <%= if slim__v do %> <%= slim__k %><%= unless slim__v == true do %>\
-    ="<%= #{value} %>"<% end %><% end %>\
-    """
   end
 
   defp leading_space(%{leading: true}), do: " "
