@@ -121,12 +121,12 @@ defmodule Slime.Compiler do
   defp render_attribute_code(name, _content, quoted, :eex) when is_binary(quoted), do: ~s[ #{name}="#{quoted}"]
 
   defp render_attribute_code(name, _content, quoted, _) when is_binary(quoted),
-    do: ~s[ #{name}="<%= {:safe, "#{quoted}"} %>"]
+    do: ~s[ #{name}={{:safe, "#{quoted}"}}"]
 
   # NOTE: string with interpolation or strings concatination
   defp render_attribute_code(name, content, _, safe) do
     value = if safe == :eex, do: content, else: "{:safe, #{content}}"
-    ~s[ #{name}="<%= #{value} %>"]
+    ~s[ #{name}={#{value}}]
   end
 
   defp leading_space(%{leading: true}), do: " "
