@@ -126,7 +126,21 @@ defmodule Slime.Compiler do
   # NOTE: string with interpolation or strings concatination
   defp render_attribute_code(name, content, _, safe) do
     value = if safe == :eex, do: content, else: "{:safe, #{content}}"
-    ~s[ #{name}={#{value}}]
+    ~s[ #{name}={#{uninterpolated_value(value)}}]
+  end
+
+  defp uninterpolated_value(value) do
+    if String.starts_with?(value, "\"\#{") and String.ends_with?(value, "}\"") do
+      uninterp = value |> String.slice(3, String.length(value) - 5)
+
+      if String.contains?(uninterp, "\#{") do
+        value
+      else
+        uninterp
+      end
+    else
+      value
+    end
   end
 
   defp leading_space(%{leading: true}), do: " "
