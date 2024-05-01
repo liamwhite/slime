@@ -38,6 +38,10 @@ defmodule Slime.Parser.Nodes do
               safe?: false
   end
 
+  defmodule EExCommentNode do
+    defstruct content: []
+  end
+
   defmodule VerbatimTextNode do
     @moduledoc """
     A verbatim text node.

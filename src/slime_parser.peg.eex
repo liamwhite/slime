@@ -76,11 +76,11 @@ parentheses <- '(' (parentheses / !')' .)* ')';
 brackets <- '[' (brackets / !']' .)* ']';
 braces <- '{' (braces / !'}' .)* '}';
 
-comment <- html_comment / space? code_comment;
+comment <- html_comment / code_comment;
 
 html_comment <- indent:space? type:'/!' content:text_block;
 
-code_comment <- '/' text_block;
+code_comment <- indent:space? type:'/' content:text_block;
 
 verbatim_text <- indent:space? type:[|'] content:text_block;
 

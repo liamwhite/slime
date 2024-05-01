@@ -5,7 +5,15 @@ defmodule Slime.Compiler do
 
   alias Slime.Doctype
 
-  alias Slime.Parser.Nodes.{DoctypeNode, EExNode, HTMLCommentNode, HTMLNode, InlineHTMLNode, VerbatimTextNode}
+  alias Slime.Parser.Nodes.{
+    DoctypeNode,
+    EExNode,
+    EExCommentNode,
+    HTMLCommentNode,
+    HTMLNode,
+    InlineHTMLNode,
+    VerbatimTextNode
+  }
 
   @void_elements ~w(
     area br col doctype embed hr img input link meta base param
@@ -65,6 +73,10 @@ defmodule Slime.Compiler do
 
   def compile(%HTMLCommentNode{content: content}) do
     "<!--" <> compile(content) <> "-->"
+  end
+
+  def compile(%EExCommentNode{content: content}) do
+    "<%# " <> compile(content) <> " %>"
   end
 
   def compile({:eex, eex}), do: "<%= " <> eex <> "%>"

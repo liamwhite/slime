@@ -8,7 +8,16 @@ defmodule Slime.Parser.Transform do
   import Slime.Parser.Preprocessor, only: [indent_size: 1]
 
   alias Slime.Parser.{AttributesKeyword, EmbeddedEngine, TextBlock}
-  alias Slime.Parser.Nodes.{DoctypeNode, EExNode, HTMLCommentNode, HTMLNode, InlineHTMLNode, VerbatimTextNode}
+
+  alias Slime.Parser.Nodes.{
+    DoctypeNode,
+    EExNode,
+    EExCommentNode,
+    HTMLCommentNode,
+    HTMLNode,
+    InlineHTMLNode,
+    VerbatimTextNode
+  }
 
   alias Slime.TemplateSyntaxError
 
@@ -118,7 +127,14 @@ defmodule Slime.Parser.Transform do
     }
   end
 
-  def transform(:code_comment, _input, _index), do: ""
+  def transform(:code_comment, input, _index) do
+    indent = indent_size(input[:indent])
+    decl_indent = indent + String.length(input[:type])
+
+    %EExCommentNode{
+      content: TextBlock.render_content(input[:content], decl_indent)
+    }
+  end
 
   def transform(:verbatim_text, input, _index) do
     indent = indent_size(input[:indent])
